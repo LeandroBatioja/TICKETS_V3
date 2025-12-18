@@ -137,3 +137,29 @@ export async function getHistorialTicket(idTicket: string): Promise<Interaccion[
   if (!res.ok) { throw new Error('Error al obtener historial'); }
   return res.json();
 }
+
+/* ================= GESTIÓN DE USUARIOS ================= */
+
+export async function getUsuarios(): Promise<User[]> {
+  const res = await fetch(`${API_URL}/usuarios`, { cache: 'no-store' });
+  if (!res.ok) {
+    const error = await res.json();
+    throw new Error(error.detail || 'Error al obtener la lista de usuarios');
+  }
+  return res.json();
+}
+
+// 🟢 Cambiamos el tipo de 'id' de string a number
+export async function updateUsuario(id: number, updates: Partial<User>): Promise<User> {
+  const res = await fetch(`${API_URL}/usuarios/${id}`, {
+    method: 'PUT', 
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(updates),
+  });
+
+  if (!res.ok) {
+    const error = await res.json();
+    throw new Error(error.detail || 'Error al actualizar usuario');
+  }
+  return res.json();
+}
