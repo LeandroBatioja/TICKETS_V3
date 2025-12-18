@@ -10,13 +10,13 @@ const API_URL = '/api';
 ====================================================== */
 
 export async function getUsuarioActual(): Promise<User> {
-  const res = await fetch(`${API_URL}/me`, { cache: 'no-store' });
+  const res = await fetch(`${API_URL}/api/me`, { cache: 'no-store' });
   if (!res.ok) { throw new Error('No autenticado'); }
   return res.json();
 }
 
 export async function loginUser(email: string): Promise<User> {
-  const res = await fetch(`${API_URL}/auth/login`, {
+  const res = await fetch(`${API_URL}/api/auth/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ email: email }),
@@ -29,7 +29,7 @@ export async function loginUser(email: string): Promise<User> {
 }
 
 export async function registerUser(nombre: string, email: string, rol: UserRole) {
-  const res = await fetch(`${API_URL}/auth/register`, {
+  const res = await fetch(`${API_URL}/api/auth/register`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ nombre: nombre, email: email, rol: rol }),
@@ -71,7 +71,7 @@ export async function getTickets(userId: number, userRole: UserRole): Promise<Ti
     user_role: userRole,
   });
 
-  const res = await fetch(`${API_URL}/tickets?${params}`, {
+  const res = await fetch(`${API_URL}/api/tickets?${params}`, {
     cache: 'no-store',
   });
   
@@ -96,7 +96,7 @@ export async function crearTicket(data: {
     operator_id: String(data.operator_id), 
   });
   
-  const res = await fetch(`${API_URL}/tickets?${params}`, {
+  const res = await fetch(`${API_URL}/api/tickets?${params}`, {
     method: 'POST',
     headers: {
         'Content-Type': 'application/json',
@@ -124,7 +124,7 @@ export async function cambiarEstadoTicket(
   nuevoEstado: 'abierto' | 'en_proceso' | 'cerrado'
 ) {
   const res = await fetch(
-    `${API_URL}/tickets/${id}/estado?nuevo_estado=${nuevoEstado}`,
+    `${API_URL}/api/tickets/${id}/estado?nuevo_estado=${nuevoEstado}`,
     { method: 'PUT' }
   );
   if (!res.ok) { throw new Error('Error al cambiar estado'); }
@@ -137,7 +137,7 @@ export async function cambiarPrioridadTicket(
   nuevaPrioridad: 'baja' | 'media' | 'alta'
 ): Promise<TicketBackend> { 
   const res = await fetch(
-    `${API_URL}/tickets/${id}/prioridad?nueva_prioridad=${nuevaPrioridad}`,
+    `${API_URL}/api/tickets/${id}/prioridad?nueva_prioridad=${nuevaPrioridad}`,
     { method: 'PUT' }
   );
   if (!res.ok) {
@@ -152,7 +152,7 @@ export async function cambiarPrioridadTicket(
 export async function getHistorialTicket(
   idTicket: string
 ): Promise<Interaccion[]> {
-  const res = await fetch(`${API_URL}/tickets/${idTicket}/historial`, { cache: 'no-store' });
+  const res = await fetch(`${API_URL}/api/tickets/${idTicket}/historial`, { cache: 'no-store' });
   if (!res.ok) { throw new Error('Error al obtener historial'); }
   return res.json();
 }
