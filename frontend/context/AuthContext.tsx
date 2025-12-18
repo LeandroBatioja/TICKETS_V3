@@ -1,4 +1,3 @@
-// context/AuthContext.tsx
 'use client';
 
 import { createContext, useContext, useEffect, useState, useCallback } from 'react';
@@ -30,29 +29,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const loadUser = useCallback(async () => {
     try {
-      // 1. Intentamos recuperar el email guardado
       const savedEmail = localStorage.getItem('user_email');
       
-      // 🛑 Si no hay email, terminamos la carga aquí y no llamamos al backend
       if (!savedEmail) {
-        setUser(null);
-        setRole(null);
-        setLoading(false);
+        setLoading(false); // 👈 Desbloquea la app si no hay sesión
         return;
       }
       
-      // 2. Si hay email, pedimos los datos reales al backend
       const currentUser = await getUsuarioActual(savedEmail);
-      
       setUser(currentUser);
       setRole(currentUser.rol);
     } catch (error) {
       console.error("Error cargando usuario:", error);
       localStorage.removeItem('user_email');
-      setUser(null);
-      setRole(null);
     } finally {
-      setLoading(false);
+      setLoading(false); // 👈 Garantiza que loading termine siempre
     }
   }, []);
 
@@ -64,10 +55,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setLoading(true);
     try {
       const loggedUser = await loginUser(email); 
-      
-      // 3. GUARDAR EL EMAIL para que persista al refrescar
       localStorage.setItem('user_email', email);
-      
       setUser(loggedUser);
       setRole(loggedUser.rol);
       router.push('/'); 
@@ -79,7 +67,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const logout = () => {
-    // 4. LIMPIAR TODO al salir
     localStorage.removeItem('user_email');
     setUser(null);
     setRole(null);
