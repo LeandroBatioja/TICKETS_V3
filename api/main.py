@@ -160,14 +160,14 @@ def register_user(usuario_data: UsuarioCreate, db: Session = Depends(get_db)):
         raise HTTPException(status_code=500, detail="Error al registrar usuario en la base de datos")
     return {"mensaje": "Registro exitoso", "id_usuario": usuario.id_usuario, "rol": usuario.rol}
 
-@app.post("/api//auth/login")
+@app.post("/api/auth/login")
 def login_user(usuario_login: UsuarioLogin, db: Session = Depends(get_db)):
     usuario = db.query(Usuario).filter(Usuario.email == usuario_login.email).first()
     if not usuario:
         raise HTTPException(status_code=401, detail="Credenciales inválidas (Email no encontrado)") 
     return {"mensaje": "Inicio de sesión exitoso", "id": usuario.id_usuario, "nombre": usuario.nombre, "rol": usuario.rol}
     
-@app.get("/api//me")
+@app.get("/api/me")
 def get_current_user(db: Session = Depends(get_db)):
     # Busca el primer usuario para simular el usuario logeado si no hay una gestión de sesión real
     usuario_simulado = db.query(Usuario).first() 
