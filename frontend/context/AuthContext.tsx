@@ -33,12 +33,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // 1. Intentamos recuperar el email guardado
       const savedEmail = localStorage.getItem('user_email');
       
-      // 2. Pasamos el email a la función de la API
-      const currentUser = await getUsuarioActual(savedEmail || undefined);
+      // 🛑 Si no hay email, terminamos la carga aquí y no llamamos al backend
+      if (!savedEmail) {
+        setUser(null);
+        setRole(null);
+        setLoading(false);
+        return;
+      }
+      
+      // 2. Si hay email, pedimos los datos reales al backend
+      const currentUser = await getUsuarioActual(savedEmail);
       
       setUser(currentUser);
       setRole(currentUser.rol);
     } catch (error) {
+      console.error("Error cargando usuario:", error);
+      localStorage.removeItem('user_email');
       setUser(null);
       setRole(null);
     } finally {
@@ -55,7 +65,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       const loggedUser = await loginUser(email); 
       
-      // 3. GUARDAR EL EMAIL para futuras recargas
+      // 3. GUARDAR EL EMAIL para que persista al refrescar
       localStorage.setItem('user_email', email);
       
       setUser(loggedUser);
@@ -69,11 +79,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const logout = () => {
-    // 4. LIMPIAR EL EMAIL al salir
+    // 4. LIMPIAR TODO al salir
     localStorage.removeItem('user_email');
     setUser(null);
     setRole(null);
-    router.push('/login'); 
+    router.replace('/login'); 
   };
 
   return (

@@ -17,30 +17,32 @@ export default function Page() {
   const router = useRouter(); 
 
   /* =========================
-     PROTECCIÓN Y CARGA
+      PROTECCIÓN DE RUTA
   ========================== */
   useEffect(() => {
     if (!loading && !user) {
-      router.push('/login'); 
+      router.replace('/login'); 
     }
   }, [loading, user, router]);
 
   const refrescarTickets = async () => {
-    if (user && role) {
-      // Pasa el ID y el Rol al backend para filtrar la lista
+    // Verificamos el ID dinámicamente (puede ser .id o .id_usuario según tu tipo)
+    const userId = user?.id || (user as any)?.id_usuario;
+
+    if (userId && role) {
       try {
-        const data = await getTickets(user.id, role); 
+        const data = await getTickets(userId, role); 
         setTickets(data);
       } catch (error) {
-          console.error("Fallo al cargar tickets:", error);
+        console.error("Fallo al cargar tickets:", error);
       }
     }
   };
 
   useEffect(() => {
-      if (user) {
-          refrescarTickets();
-      }
+    if (user) {
+      refrescarTickets();
+    }
   }, [user]); 
 
   const actualizarTicket = async (updatedTicket: Ticket) => {
@@ -49,51 +51,70 @@ export default function Page() {
     );
   };
 
-  if (loading || !user) return null; 
+  // 🛑 Bloqueo visual: Si está cargando o no hay usuario, mostramos un spinner
+  if (loading || !user) {
+    return (
+      <div className="flex h-screen w-full items-center justify-center bg-slate-50">
+        <div className="flex flex-col items-center gap-4">
+          <div className="h-12 w-12 animate-spin rounded-full border-4 border-indigo-600 border-t-transparent"></div>
+          <p className="text-slate-600 font-medium">Verificando sesión...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <main className="p-8 max-w-7xl mx-auto">
-
-      {/* BOTÓN DE CERRAR SESIÓN */}
-      <button
-        onClick={logout}
-        className="top-4 right-4 px-4 py-2 bg-red-500 text-white rounded-xl hover:bg-red-600 transition"
-      >
-        Cerrar Sesión ({user.rol})
-      </button>
-
-      {/* HEADER */}
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-slate-800">
-          🎫 Gestión de Tickets (Rol: {role})
-        </h1>
+      {/* HEADER Y CERRAR SESIÓN */}
+      <div className="flex justify-between items-start mb-8">
+        <div>
+          <h1 className="text-3xl font-bold text-slate-800">
+            🎫 Gestión de Tickets
+          </h1>
+          <p className="text-slate-500">Bienvenido, {user.nombre} ({role})</p>
+        </div>
         
-        {/* LÓGICA DE VISIBILIDAD: SOLO EL OPERADOR PUEDE CREAR TICKET */}
+        <button
+          onClick={logout}
+          className="px-4 py-2 bg-red-50 text-red-600 font-semibold rounded-xl border border-red-200 hover:bg-red-500 hover:text-white transition-all"
+        >
+          Cerrar Sesión
+        </button>
+      </div>
+
+      {/* ACCIONES PRINCIPALES */}
+      <div className="mb-8 flex justify-end">
         {role === 'operador' && (
           <button
             onClick={() => setMostrarModal(true)}
-            className="px-4 py-2 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition"
+            className="px-6 py-3 bg-indigo-600 text-white rounded-xl font-bold shadow-lg shadow-indigo-200 hover:bg-indigo-700 hover:scale-105 transition-all"
           >
-            ➕ Nuevo Ticket para Cliente
+            ➕ Crear Nuevo Ticket
           </button>
         )}
       </div>
       
-      {/* STATS */}
+      {/* ESTADÍSTICAS */}
       <DashboardStats tickets={tickets} />
 
-      {/* LISTA */}
-      <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-        {tickets.map((ticket) => (
-          <TicketCard
-            key={ticket.id}
-            ticket={ticket}
-            onUpdate={actualizarTicket}
-          />
-        ))}
+      {/* LISTADO DE TICKETS */}
+      <section className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {tickets.length > 0 ? (
+          tickets.map((ticket) => (
+            <TicketCard
+              key={ticket.id}
+              ticket={ticket}
+              onUpdate={actualizarTicket}
+            />
+          ))
+        ) : (
+          <div className="col-span-full py-20 text-center bg-white rounded-3xl border-2 border-dashed border-slate-200">
+            <p className="text-slate-400">No se encontraron tickets en tu cuenta.</p>
+          </div>
+        )}
       </section>
 
-      {/* MODAL NUEVO TICKET */}
+      {/* MODAL */}
       {mostrarModal && (
         <NewTicketModal
           onClose={() => setMostrarModal(false)}
