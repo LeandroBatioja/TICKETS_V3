@@ -138,28 +138,42 @@ export async function getHistorialTicket(idTicket: string): Promise<Interaccion[
   return res.json();
 }
 
-/* ================= GESTIÓN DE USUARIOS ================= */
+/* ================= MAPPER Y API USUARIOS ================= */
+
+interface UsuarioBackend {
+  id_usuario: number;
+  nombre: string;
+  email: string;
+  rol: UserRole;
+  activo?: boolean; // Asegúrate de que este campo exista en tu DB
+}
+
+// Transformamos los datos del Backend al formato del Frontend
+function mapUsuario(u: UsuarioBackend): User {
+  return {
+    id: u.id_usuario, // Convertimos id_usuario a id para el componente
+    nombre: u.nombre,
+    email: u.email,
+    rol: u.rol,
+    activo: u.activo ?? true, 
+  } as any;
+}
 
 export async function getUsuarios(): Promise<User[]> {
   const res = await fetch(`${API_URL}/usuarios`, { cache: 'no-store' });
-  if (!res.ok) {
-    const error = await res.json();
-    throw new Error(error.detail || 'Error al obtener la lista de usuarios');
-  }
-  return res.json();
+  if (!res.ok) throw new Error('Error al obtener usuarios');
+  const data: UsuarioBackend[] = await res.json();
+  return data.map(mapUsuario);
 }
 
-// 🟢 Cambiamos el tipo de 'id' de string a number
 export async function updateUsuario(id: number, updates: Partial<User>): Promise<User> {
+  // Ajustamos para que coincida con lo que tu backend espera (id_usuario)
   const res = await fetch(`${API_URL}/usuarios/${id}`, {
-    method: 'PUT', 
+    method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(updates),
   });
-
-  if (!res.ok) {
-    const error = await res.json();
-    throw new Error(error.detail || 'Error al actualizar usuario');
-  }
+  if (!res.ok) throw new Error('Error al actualizar');
   return res.json();
 }
+
