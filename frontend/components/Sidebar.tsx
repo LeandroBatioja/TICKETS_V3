@@ -93,10 +93,24 @@ export default function Sidebar() {
   
   <button
     onClick={logout}
-    className="w-full flex items-center gap-3 px-4 py-2 text-slate-600 hover:text-red-600 hover:bg-red-50 rounded-xl transition-all duration-200 font-semibold group"
+    className="w-full flex items-center justify-center lg:justify-start gap-3 px-4 py-3 text-slate-500 hover:text-red-600 hover:bg-red-50 rounded-2xl transition-all duration-300 group relative"
   >
-    <span className="text-lg">🚪</span>
-    <span>Cerrar Sesión</span>
+    {/* Icono de la Puerta (El "indicador" responsive) */}
+    <div className="flex items-center justify-center min-w-[24px]">
+      <span className="text-2xl transition-transform duration-300 group-hover:scale-110 group-active:scale-95">
+        🚪
+      </span>
+    </div>
+
+    {/* Texto dinámico */}
+    <span className="hidden lg:block overflow-hidden whitespace-nowrap transition-all duration-300 font-bold tracking-tight">
+      Cerrar Sesión
+    </span>
+
+    {/* Tooltip opcional: Solo aparece en móviles/pantallas pequeñas cuando dejas presionado o pasas el mouse */}
+    <span className="absolute left-20 bg-slate-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 lg:group-hover:opacity-0 transition-opacity pointer-events-none border border-slate-700">
+      Salir
+    </span>
   </button>
 </div>
     </aside>
