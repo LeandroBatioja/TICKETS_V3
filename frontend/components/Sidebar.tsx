@@ -74,36 +74,32 @@ export default function Sidebar() {
       </nav>
 
       {/* PERFIL Y LOGOUT */}
-      <div className="pt-5 border-t border-slate-100">
-      {/* Contenedor del perfil de usuario (opcional) */}
-      <div className="flex items-center gap-3 mb-4 px-2 lg:flex-row flex-col">
-        <div className="h-9 w-9 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-bold border border-indigo-200">
-          {user?.nombre?.charAt(0).toUpperCase()}
-        </div>
-        <div className="hidden lg:block flex-1 min-w-0">
-          <p className="text-sm font-bold text-slate-800 truncate">{user?.nombre}</p>
-        </div>
+     <div className="pt-5 border-t border-slate-100 mt-auto">
+  <div className="group relative flex items-center">
+    {/* Contenedor Principal del Botón */}
+    <button
+      onClick={logout}
+      className="flex items-center gap-0 group-hover:gap-3 p-2 rounded-2xl transition-all duration-500 ease-in-out hover:bg-slate-50"
+    >
+      {/* Icono de la Puerta Rojo */}
+      <div className="h-12 w-12 bg-red-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-red-200 transition-transform duration-300 group-hover:scale-105 active:scale-95">
+        <span className="text-2xl">🚪</span>
       </div>
-      
-      {/* BOTÓN CERRAR SESIÓN CON TOOLTIP */}
-      <div className="relative group">
-        <button
-          onClick={logout}
-          className="w-full flex items-center justify-center lg:justify-start gap-3 px-4 py-3 text-slate-500 hover:text-red-600 hover:bg-red-50 rounded-xl transition-all duration-200"
-        >
-          <span className="text-2xl transition-transform group-hover:scale-110">
-            🚪
-          </span>
-          <span className="hidden lg:block font-bold text-sm">Salir</span>
-        </button>
 
-        {/* ESTE ES EL CUADRITO QUE APARECE AL TOCAR LA PUERTA */}
-        <div className="absolute left-full ml-2 top-1/2 -translate-y-1/2 px-2 py-1 bg-slate-800 text-white text-xs rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50 lg:hidden">
-          Cerrar Sesión
-          {/* Flechita del tooltip */}
-          <div className="absolute right-full top-1/2 -translate-y-1/2 border-4 border-transparent border-r-slate-800"></div>
+      {/* Flecha y Texto que aparecen en Hover */}
+      <div className="flex items-center opacity-0 -translate-x-4 pointer-events-none group-hover:opacity-100 group-hover:translate-x-0 group-hover:pointer-events-auto transition-all duration-500 ease-out">
+        {/* Flechita Roja */}
+        <span className="text-red-500 font-bold text-xl mr-2">→</span>
+        
+        {/* Etiqueta Cerrar Sesión */}
+        <div className="px-4 py-2 bg-white border border-slate-200 rounded-full shadow-sm">
+          <span className="text-red-600 font-bold whitespace-nowrap text-sm">
+            Cerrar sesión
+          </span>
         </div>
       </div>
+    </button>
+  </div>
 </div>
     </aside>
   );
