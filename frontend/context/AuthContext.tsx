@@ -30,7 +30,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const loadUser = useCallback(async () => {
     try {
-      const currentUser = await getUsuarioActual();
+      // 1. Intentamos recuperar el email guardado
+      const savedEmail = localStorage.getItem('user_email');
+      
+      // 2. Pasamos el email a la función de la API
+      const currentUser = await getUsuarioActual(savedEmail || undefined);
+      
       setUser(currentUser);
       setRole(currentUser.rol);
     } catch (error) {
@@ -48,8 +53,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const login = async (email: string) => {
     setLoading(true);
     try {
-      // Llama a la API que consulta la BD
       const loggedUser = await loginUser(email); 
+      
+      // 3. GUARDAR EL EMAIL para futuras recargas
+      localStorage.setItem('user_email', email);
+      
       setUser(loggedUser);
       setRole(loggedUser.rol);
       router.push('/'); 
@@ -61,9 +69,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const logout = () => {
+    // 4. LIMPIAR EL EMAIL al salir
+    localStorage.removeItem('user_email');
     setUser(null);
     setRole(null);
-    router.push('login'); 
+    router.push('/login'); 
   };
 
   return (
