@@ -215,3 +215,17 @@ def cambiar_estado_ticket(id: int, nuevo_estado: EstadoTicket, db: Session = Dep
 @app.get("/api/tickets/{id_ticket}/historial")
 def historial_ticket(id_ticket: int, db: Session = Depends(get_db)):
     return db.query(Interaccion).filter(Interaccion.id_ticket == id_ticket).order_by(Interaccion.fecha_creacion).all()
+
+
+# ======================================================
+# ENDPOINT DE GESTIÓN DE USUARIOS (Agrégalo al final)
+# ======================================================
+
+@app.get("/api/usuarios")
+def obtener_todos_los_usuarios(db: Session = Depends(get_db)):
+    try:
+        # Consultamos todos los usuarios de la tabla
+        usuarios = db.query(Usuario).all()
+        return usuarios
+    except SQLAlchemyError:
+        raise HTTPException(status_code=500, detail="Error al consultar la base de datos")

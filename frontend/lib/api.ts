@@ -162,19 +162,19 @@ function mapUsuario(u: UsuarioBackend): User {
 export async function getUsuarios(): Promise<User[]> {
   try {
     const res = await fetch(`${API_URL}/usuarios`, { cache: 'no-store' });
-    if (!res.ok) throw new Error('Error al conectar con la base de datos');
+    if (!res.ok) throw new Error('Error al obtener usuarios');
 
-    const dataBackend = await res.json();
+    const data = await res.json();
 
-    // Mapeamos los datos usando los nombres exactos de tu CREATE TABLE usuarios
-    return dataBackend.map((u: any) => ({
-      id: u.id_usuario, // Tu columna: id_usuario
-      nombre: u.nombre, // Tu columna: nombre
-      email: u.email,   // Tu columna: email
-      rol: u.rol        // Tu columna: rol (cliente o operador)
+    // Mapeo exacto basado en tu clase Usuario de SQLAlchemy
+    return data.map((u: any) => ({
+      id: u.id_usuario, // id_usuario es la Primary Key en tu main.py
+      nombre: u.nombre,
+      email: u.email,
+      rol: u.rol
     }));
   } catch (error) {
-    console.error("Fallo al leer la tabla usuarios:", error);
+    console.error("Fallo al conectar con FastAPI:", error);
     return [];
   }
 }
