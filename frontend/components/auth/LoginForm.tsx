@@ -1,3 +1,4 @@
+// components/auth/LoginForm.tsx
 'use client';
 
 import { useState } from 'react';
@@ -7,53 +8,62 @@ import AuthLayout from './AuthLayout';
 export default function LoginForm() {
   const [email, setEmail] = useState(''); 
   const [error, setError] = useState<string | null>(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [loading, setLoading] = useState(false);
   const { login } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-    setIsSubmitting(true);
+    if (!email.trim()) {
+      setError('El email es obligatorio');
+      return;
+    }
 
+    setLoading(true);
     try {
       await login(email); 
     } catch (err: any) {
-      setError('Correo no registrado o error de conexión');
+      // Muestra el error del backend (ej: "Credenciales inválidas")
+      setError(err.message || 'Error desconocido al iniciar sesión');
     } finally {
-      setIsSubmitting(false);
+      setLoading(false);
     }
   };
 
   return (
     <AuthLayout
       title="🔑 Iniciar Sesión"
-      footerText="Acceso exclusivo para personal y clientes"
-      footerLink="Soporte Técnico"
-      footerHref="#"
+      footerText="¿No tienes cuenta?"
+      footerLink="Regístrate"
+      footerHref="/register"
     >
       <form onSubmit={handleSubmit} className="space-y-4">
         {error && (
-          <div className="bg-red-50 text-red-600 p-3 rounded-xl text-sm border border-red-100 italic">
+          <div className="bg-red-100 text-red-700 p-3 rounded-lg text-sm">
             {error}
           </div>
         )}
         <div>
-          <label className="block text-sm font-medium text-slate-600 mb-1">Email</label>
+          <label className="block text-sm text-slate-600 mb-1">
+            Email
+          </label>
           <input
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full border border-slate-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
-            placeholder="ejemplo@correo.com"
+            className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-300"
+            placeholder="Introduce tu email registrado"
             required
           />
         </div>
+
         <button
           type="submit"
-          disabled={isSubmitting}
-          className="w-full py-3 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 transition font-bold shadow-lg shadow-indigo-200 disabled:opacity-50"
+          disabled={loading}
+          // Color principal: bg-indigo-600
+          className="w-full px-4 py-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 transition disabled:opacity-50 font-semibold"
         >
-          {isSubmitting ? 'Cargando...' : 'Entrar'}
+          {loading ? 'Verificando...' : 'Iniciar Sesión'}
         </button>
       </form>
     </AuthLayout>
