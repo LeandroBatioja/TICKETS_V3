@@ -71,7 +71,7 @@ export async function getTickets(userId: number, userRole: UserRole): Promise<Ti
     user_role: userRole,
   });
 
-  const res = await fetch(`${API_URL}/api/tickets?${params}`, {
+  const res = await fetch(`${API_URL}/tickets?${params}`, {
     cache: 'no-store',
   });
   
