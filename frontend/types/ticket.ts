@@ -22,5 +22,6 @@ export type UserRole = 'admin' | 'operador' | 'cliente';
 export interface User {
   id: number;
   nombre: string;
+  email: string;
   rol: UserRole;
 }

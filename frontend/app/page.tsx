@@ -73,13 +73,6 @@ export default function Page() {
           </h1>
           <p className="text-slate-500">Bienvenido, {user.nombre} ({role})</p>
         </div>
-        
-        <button
-          onClick={logout}
-          className="px-4 py-2 bg-red-50 text-red-600 font-semibold rounded-xl border border-red-200 hover:bg-red-500 hover:text-white transition-all"
-        >
-          Cerrar Sesión
-        </button>
       </div>
 
       {/* ACCIONES PRINCIPALES */}
