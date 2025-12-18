@@ -75,30 +75,30 @@ export default function Sidebar() {
 
       {/* PERFIL Y LOGOUT */}
       <div className="pt-5 border-t border-slate-100">
-    <div className="flex items-center gap-3 mb-4 px-2">
-        <div className="h-9 w-9 rounded-full bg-slate-200 flex items-center justify-center text-slate-600 font-bold border border-slate-300">
-        {user?.nombre?.charAt(0).toUpperCase() || 'U'}
-        </div>
-        <div className="flex-1 min-w-0">
-        {/* Usamos el encadenamiento opcional ?. para evitar errores si user es null por un milisegundo */}
-        <p className="text-sm font-bold text-slate-800 truncate">
-            {user?.nombre}
-        </p>
-        <p className="text-xs text-slate-500 truncate">
-            {/* Forzamos a TS a entender que aquí viene el email */}
-            {(user as any).email || 'Sin correo'}
-        </p>
-        </div>
+  <div className="flex items-center gap-3 mb-4 px-2">
+    <div className="h-9 w-9 rounded-full bg-slate-200 flex items-center justify-center text-slate-600 font-bold border border-slate-300">
+      {user?.nombre?.charAt(0).toUpperCase() || 'U'}
     </div>
-    
-    <button
-        onClick={logout}
-        className="w-full flex items-center gap-3 px-4 py-2 text-slate-600 hover:text-red-600 hover:bg-red-50 rounded-xl transition-all duration-200 font-semibold group"
-    >
-        <span className="text-lg">🚪</span>
-        <span>Cerrar Sesión</span>
-    </button>
+    <div className="flex-1 min-w-0">
+      {/* Usamos el encadenamiento opcional ?. para evitar errores si user es null por un milisegundo */}
+      <p className="text-sm font-bold text-slate-800 truncate">
+        {user?.nombre}
+      </p>
+      <p className="text-xs text-slate-500 truncate">
+        {/* Forzamos a TS a entender que aquí viene el email */}
+        {(user as any).email || 'Sin correo'}
+      </p>
     </div>
+  </div>
+  
+  <button
+    onClick={logout}
+    className="w-full flex items-center gap-3 px-4 py-2 text-slate-600 hover:text-red-600 hover:bg-red-50 rounded-xl transition-all duration-200 font-semibold group"
+  >
+    <span className="text-lg">🚪</span>
+    <span>Cerrar Sesión</span>
+  </button>
+</div>
     </aside>
   );
 }
