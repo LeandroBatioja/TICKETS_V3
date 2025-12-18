@@ -75,43 +75,35 @@ export default function Sidebar() {
 
       {/* PERFIL Y LOGOUT */}
       <div className="pt-5 border-t border-slate-100">
-  <div className="flex items-center gap-3 mb-4 px-2">
-    <div className="h-9 w-9 rounded-full bg-slate-200 flex items-center justify-center text-slate-600 font-bold border border-slate-300">
-      {user?.nombre?.charAt(0).toUpperCase() || 'U'}
-    </div>
-    <div className="flex-1 min-w-0">
-      {/* Usamos el encadenamiento opcional ?. para evitar errores si user es null por un milisegundo */}
-      <p className="text-sm font-bold text-slate-800 truncate">
-        {user?.nombre}
-      </p>
-      <p className="text-xs text-slate-500 truncate">
-        {/* Forzamos a TS a entender que aquí viene el email */}
-        {(user as any).email || 'Sin correo'}
-      </p>
-    </div>
-  </div>
-  
-  <button
-    onClick={logout}
-    className="w-full flex items-center justify-center lg:justify-start gap-3 px-4 py-3 text-slate-500 hover:text-red-600 hover:bg-red-50 rounded-2xl transition-all duration-300 group relative"
-  >
-    {/* Icono de la Puerta (El "indicador" responsive) */}
-    <div className="flex items-center justify-center min-w-[24px]">
-      <span className="text-2xl transition-transform duration-300 group-hover:scale-110 group-active:scale-95">
-        🚪
-      </span>
-    </div>
+      {/* Contenedor del perfil de usuario (opcional) */}
+      <div className="flex items-center gap-3 mb-4 px-2 lg:flex-row flex-col">
+        <div className="h-9 w-9 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-bold border border-indigo-200">
+          {user?.nombre?.charAt(0).toUpperCase()}
+        </div>
+        <div className="hidden lg:block flex-1 min-w-0">
+          <p className="text-sm font-bold text-slate-800 truncate">{user?.nombre}</p>
+        </div>
+      </div>
+      
+      {/* BOTÓN CERRAR SESIÓN CON TOOLTIP */}
+      <div className="relative group">
+        <button
+          onClick={logout}
+          className="w-full flex items-center justify-center lg:justify-start gap-3 px-4 py-3 text-slate-500 hover:text-red-600 hover:bg-red-50 rounded-xl transition-all duration-200"
+        >
+          <span className="text-2xl transition-transform group-hover:scale-110">
+            🚪
+          </span>
+          <span className="hidden lg:block font-bold text-sm">Salir</span>
+        </button>
 
-    {/* Texto dinámico */}
-    <span className="hidden lg:block overflow-hidden whitespace-nowrap transition-all duration-300 font-bold tracking-tight">
-      Cerrar Sesión
-    </span>
-
-    {/* Tooltip opcional: Solo aparece en móviles/pantallas pequeñas cuando dejas presionado o pasas el mouse */}
-    <span className="absolute left-20 bg-slate-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 lg:group-hover:opacity-0 transition-opacity pointer-events-none border border-slate-700">
-      Salir
-    </span>
-  </button>
+        {/* ESTE ES EL CUADRITO QUE APARECE AL TOCAR LA PUERTA */}
+        <div className="absolute left-full ml-2 top-1/2 -translate-y-1/2 px-2 py-1 bg-slate-800 text-white text-xs rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50 lg:hidden">
+          Cerrar Sesión
+          {/* Flechita del tooltip */}
+          <div className="absolute right-full top-1/2 -translate-y-1/2 border-4 border-transparent border-r-slate-800"></div>
+        </div>
+      </div>
 </div>
     </aside>
   );
